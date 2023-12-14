@@ -2,34 +2,70 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LoginPage, SignupPage, ActivationPage, HomePage, UploadPodcast } from "./Routes.js";
+import DataProvider from "./context/DataProvider";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
+import {
+  LoginPage,
+  SignupPage,
+  ActivationPage,
+  HomePage,
+  UploadPodcast,
+} from "./Routes.js";
+
+const PrivateRoute = () => {
+  const token = sessionStorage.getItem("accessToken");
+  return token ? (
+    <>
+      <Outlet />
+    </>
+  ) : (
+    <Navigate replace to="/login" />
+  );
+};
+
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route
-          path="/activation/:activation_token"
-          element={<ActivationPage />}
+    <DataProvider>
+      <BrowserRouter>
+        <div>
+          <Routes>
+            <Route element={<PrivateRoute />}>
+              <Route path="/create" element={<UploadPodcast />} />
+            </Route>
+
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/login"
+              element={<LoginPage />}
+            />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route
+              path="/activation/:activation_token"
+              element={<ActivationPage />}
+            />
+          </Routes>
+        </div>
+
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
         />
-        <Route path="/upload" element={<UploadPodcast />} />
-      </Routes>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-    </BrowserRouter>
+      </BrowserRouter>
+    </DataProvider>
   );
 };
 

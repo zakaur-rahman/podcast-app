@@ -10,7 +10,7 @@ export const signAccessToken = (userId) => {
     const payload = {};
     const ACCESS_SECRET_KEY = process.env.ACCESS_SECRET_KEY;
     const options = {
-      expiresIn: "15s",
+      expiresIn: "15m",
       audience: userId, //expiration time in seconds
     };
     try {

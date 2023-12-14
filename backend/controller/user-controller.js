@@ -38,7 +38,7 @@ export const signupUser = async (request, response, next) => {
         subject: "Activate your account",
         message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
       });
-      response.status(201).json({
+      response.status(200).json({
         success: true,
         message: `please check your email:- ${user.email} to activate your account!`,
       });
@@ -78,7 +78,7 @@ export const loginUser = async (request, response, next) => {
     const refreshToken = await signRefreshToken(user.id);
     response
       .status(200)
-      .json({ accessToken: accessToken, refreshToken: refreshToken });
+      .json({ accessToken: accessToken, refreshToken: refreshToken, name: user.name, email: user.email });
   } catch (error) {
     if (error.isJoi === true)
       return next(createHttpError.BadRequest("Invalid Email or Password."));
@@ -148,8 +148,12 @@ export const activateAccount = async (req, res, next) => {
       email: email,
       password: hashedPassword,
     });
+    const accessToken = await signAccessToken(user.id);
+    const refreshToken = await signRefreshToken(user.id);
+    response
+      .status(200)
+      .json({ accessToken: accessToken, refreshToken: refreshToken, name: user.name, email: user.email });
     console.log(user);
-    sendToken(user, 201, res);
   } catch (error) {
     next(createHttpError.InternalServerError());
   }

@@ -1,37 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+//import Banner from '../banner/Banner';
+import Categories from '../components/Categories';
+import Podcasts from '../components/Podcast/Podcasts.jsx';
+import { Header } from '../Routes.js';
+import Banner from '../components/Banner.jsx';
 
-const HomePage = () => {
-  const [popularPodcasts, setPopularPodcasts] = useState([]);
-
-  useEffect(() => {
-    // Fetch popular podcasts from the backend
-    fetch('/api/popular')
-      .then((res) => res.json())
-      .then((data) => setPopularPodcasts(data))
-      .catch((error) => console.error('Error fetching popular podcasts:', error));
-  }, []);
-
+const Home = () => {
   return (
-    <div className="App">
-      <header>
-        <h1>Podcast App</h1>
-        <nav>
-          <ul>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/signup">Signup</a></li>
-          </ul>
-        </nav>
-      </header>
-      <main>
-        <h2>Most Popular Podcasts</h2>
-        <ul>
-          {popularPodcasts.map((podcast) => (
-            <li key={podcast.id}>{podcast.title}</li>
-          ))}
-        </ul>
-      </main>
-    </div>
+    <> <Header/>
+    <Banner/>
+      <div className="flex">
+        <div className="w-1/4">
+          <Categories />
+        </div>
+        <div className="w-3/4">
+          <Podcasts />
+        </div>
+      </div>
+    </>
   );
 }
 
-export default HomePage;
+export default Home;

@@ -1,17 +1,22 @@
 import express from 'express'
 import { signupUser, loginUser, newAccessToken, logoutUser, activateAccount} from '../controller/user-controller.js';
-import { uploadPodcast } from '../controller/podcast-controller.js';
+import { createPodcast, getPodcastById, getAllPodcast } from '../controller/podcast-controller.js';
+import { verifyToken } from '../controller/jwt-controller.js';
 
 const router = express.Router();
 
-router.post('/register', signupUser);
+router.post('/signup', signupUser);
 router.post('/activation', activateAccount)
+
 router.post('/login', loginUser);
-router.post('/refresh-token',  newAccessToken);
+router.post('/token',  newAccessToken);
+
+router.post('/create', verifyToken, createPodcast);
+
+router.get('/post/:id', verifyToken, getPodcastById);
+router.get('/posts', getAllPodcast);
+
 router.delete('/logout', logoutUser);
-
-router.post('/upload-podcast',  uploadPodcast);
-
 
 
 export default router

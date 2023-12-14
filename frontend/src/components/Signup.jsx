@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../styles/styles.js";
 import { Link } from "react-router-dom";
-//import { RxAvatar } from "react-icons/rx";
+import { API } from "../service/api.js";
+import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 import { server } from "../server.js";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 const initialValues = {
@@ -15,8 +16,10 @@ const initialValues = {
 
 const Signup = () => {
   const [values, setValues] = useState(initialValues);
-
   const [visible, setVisible] = useState(true);
+  const navigate = useNavigate();
+
+  
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -24,21 +27,21 @@ const Signup = () => {
       headers: { "Content-Type": "application/json" },
     };
     
-
     try {
-      console.log(values);
       await axios
-        .post(`${server}/register`, values, config)
+        .post(`${server}/signup`, values, config)
         .then((res) => {
           console.log(res);
-          alert("User created successfully!");
+          setValues(initialValues)
+          alert("Please check your email for verification.");
+          navigate('/login')
         });
     } catch (err) {
       toast.error(`${err.message}`)
       console.log("error:", err);
     }
   };
-
+  
 
 
   const handleInputChange = (e) => {

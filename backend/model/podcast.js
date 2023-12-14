@@ -7,25 +7,32 @@ const podcastSchema = mongoose.Schema({
   },
   description: {
     type: String,
-    required:true
+    required: true,
   },
-  url: {
+  fileUrl: {
+    type: String,
+    required: true,
+  },
+  email: {
     type: String,
     required:true
-  },
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
   },
   Speaker: {
     type: String,
-    required:true
+    required: true,
+  },
+  categories: {
+    type: Array,
+    required: false,
   },
   type: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
+  createdDate: {
+    type: Date,
+  },
 });
 
-const Podcast = mongoose.model("podcast", podcastSchema)
-export default Podcast
+const Podcast = mongoose.model("podcast", podcastSchema);
+export default Podcast;

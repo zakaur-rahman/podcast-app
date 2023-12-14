@@ -3,7 +3,6 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import Router from './routes/route.js'
-import cloudinary from 'cloudinary'
 import Connect from './database/db.js'
 import morgan from 'morgan'
 import createHttpError from 'http-errors'
@@ -18,13 +17,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/api/v2', Router);
 
-
-cloudinary.v2.config({
-    cloud_name: process.env.ClOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET,
-    secure: true,
-});
 
 // Error handling middleware
 app.use(async (req, res, next) => {
