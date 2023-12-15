@@ -9,7 +9,10 @@ const Post = ({ post }) => {
 
     return (
         <div className="border border-solid border-gray-300 rounded-md m-10 flex flex-col items-center h-350">
-            <img className="w-full object-cover border-b-2 border-gray-300 rounded-t-md h-150" src={url} alt={"post"} />
+            <video width="600">
+        <source src= {post.fileUrl} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
             <p className="py-0 px-5 mb-1 text-gray-700 text-sm">{post.categories}</p>
             <p className="py-0 px-5 mb-1 text-xl font-semibold">{addEllipsis(post.title, 20)}</p>
             <p className="py-0 px-5 mb-1 text-gray-700 text-sm">Author: {post.name}</p>

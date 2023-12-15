@@ -12,10 +12,10 @@ import {
 
 import jwt from "jsonwebtoken"
 
-export const signupUser = async (request, response, next) => {
+export const signupUser = async (req, res, next) => {
   try {
-    console.log(request.body);
-    const result = await joiSchemaSignup.validateAsync(request.body);
+    console.log(req.body);
+    const result = await joiSchemaSignup.validateAsync(req.body);
     const doesExist = await User.findOne({ email: result.email });
     if (doesExist) {
       throw createHttpError.Conflict(`Email already exists`);
@@ -38,7 +38,7 @@ export const signupUser = async (request, response, next) => {
         subject: "Activate your account",
         message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
       });
-      response.status(200).json({
+      res.status(200).json({
         success: true,
         message: `please check your email:- ${user.email} to activate your account!`,
       });
@@ -51,7 +51,7 @@ export const signupUser = async (request, response, next) => {
     /*const savedUser = await user.save();
      const accessToken = await signAccessToken(savedUser.id);
     const refreshToken = await signRefreshToken(savedUser.id);
-    response
+    res
       .status(200)
       .json({ accessToken: accessToken, refreshToken: refreshToken }); */
   
@@ -61,9 +61,9 @@ export const signupUser = async (request, response, next) => {
   }
 };
 
-export const loginUser = async (request, response, next) => {
+export const loginUser = async (req, res, next) => {
   try {
-    const result = await joiSchemaLogin.validateAsync(request.body);
+    const result = await joiSchemaLogin.validateAsync(req.body);
     const user = await User.findOne({ email: result.email });
     if (!user) {
       throw createHttpError.NotFound("User not Found.");
@@ -76,7 +76,7 @@ export const loginUser = async (request, response, next) => {
 
     const accessToken = await signAccessToken(user.id);
     const refreshToken = await signRefreshToken(user.id);
-    response
+    res
       .status(200)
       .json({ accessToken: accessToken, refreshToken: refreshToken, name: user.name, email: user.email });
   } catch (error) {
@@ -86,9 +86,9 @@ export const loginUser = async (request, response, next) => {
   }
 };
 
-export const newAccessToken = async (request, response, next) => {
+export const newAccessToken = async (req, res, next) => {
   try {
-    const { refreshToken } = request.body;
+    const { refreshToken } = req.body;
     console.log(refreshToken);
 
     if (!refreshToken) throw next(createHttpError.BadRequest());
@@ -96,7 +96,7 @@ export const newAccessToken = async (request, response, next) => {
 
     const accessToken = await signAccessToken(userId);
     const newRefreshToken = await signRefreshToken(userId);
-    response
+    res
       .status(200)
       .json({ accessToken: accessToken, refreshToken: newRefreshToken });
   } catch (err) {
@@ -105,14 +105,14 @@ export const newAccessToken = async (request, response, next) => {
 };
 
 
-export const logoutUser = async (request, response, next) => {
+export const logoutUser = async (req, res, next) => {
   try {
-    const { refreshToken } = request.body;
+    const { refreshToken } = req.body;
     if (!refreshToken) throw next(createHttpError.BadRequest());
     const userId = await verifyRefreshToken(refreshToken);
 
     await client.del(`${userId}`);
-    response.sendStatus(204);
+    res.sendStatus(204);
   } catch (err) {
     next(createHttpError.InternalServerError());
   }
@@ -150,7 +150,7 @@ export const activateAccount = async (req, res, next) => {
     });
     const accessToken = await signAccessToken(user.id);
     const refreshToken = await signRefreshToken(user.id);
-    response
+    res
       .status(200)
       .json({ accessToken: accessToken, refreshToken: refreshToken, name: user.name, email: user.email });
     console.log(user);

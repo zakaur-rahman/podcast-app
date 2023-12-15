@@ -17,12 +17,12 @@ const podcastSchema = mongoose.Schema({
     type: String,
     required:true
   },
-  Speaker: {
+  speaker: {
     type: String,
     required: true,
   },
   categories: {
-    type: Array,
+    type: String,
     required: false,
   },
   type: {

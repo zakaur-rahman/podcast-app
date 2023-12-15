@@ -29,6 +29,7 @@ const UploadPodcast = () => {
   const [post, setPost] = useState(initialValues);
   const { account } = useContext(DataContext);
   const [file, setFile] = useState(undefined);
+  const [fileUrl, setfileUrl] = useState(null)
   const [filePerc, setFilePerc] = useState(0);
   const [accessToken, setAccessToken] = useState(null);
   const location = useLocation();
@@ -38,12 +39,13 @@ const UploadPodcast = () => {
   }, []);
 
   useEffect(() => {
-    file && uploadFile(file, "fileUrl");
+    file && uploadFile(file);
   }, [file]);
 
-  const uploadFile = (file, fileType) => {
+  const uploadFile = (file) => {
+    console.log(account);
     const storage = getStorage(app);
-    const folder = fileType === "video" ? "videos/" : "audio/";
+    const folder = "Podcast Files"
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, folder + fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -60,8 +62,8 @@ const UploadPodcast = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          post.fileUrl = downloadURL;
-          console.log("DownloadURL - ", post.fileUrl);
+          setfileUrl(downloadURL);
+          console.log("DownloadURL - ", fileUrl);
           setFilePerc(0);
         });
       }
@@ -76,9 +78,10 @@ const UploadPodcast = () => {
         Authorization: accessToken,
       },
     };
+    post.fileUrl = fileUrl
+    post.email = account.email;
     try {
       post.categories = location.search?.split("=")[1] || "All";
-      post.email = account.email;
       await axios.post(`${server}/create`, post, config).then((res) => {
         console.log(res);
         setPost(initialValues);
@@ -100,6 +103,42 @@ const UploadPodcast = () => {
       onSubmit={(e) => handleUpload(e)}
       className=" rounded-md shadow-sm ring-1 ring-inset ring-gray-300 space-y-12 space-x-8 items-center flex-col relative justify-center"
     >
+      {!fileUrl ? (
+         <div className="col-span-full">
+         <label
+           htmlFor="file"
+           className="block text-sm font-medium leading-6 text-gray-900"
+         >
+           Podcast File
+         </label>
+         <div className="mt-2 ">
+           <div className=" rounded-md flex-col text-justify justify-items-center shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+             <PhotoIcon
+               className="mx-auto h-12 w-12 text-gray-300"
+               aria-hidden="true"
+             />
+             <div className="mt-1 flex justify-center align-middle text-sm leading-6 text-gray-600">
+               <label
+                 htmlFor="file"
+                 className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+               >
+                 <span>Upload a file</span>
+                 <input
+                   id="file"
+                   name="file"
+                   type="file"
+                   accept="video/*, audio*"
+                   onChange={(e) => setFile((prev) => e.target.files[0])}
+                   className="sr-only"
+                 />
+               </label>{" "}
+               {filePerc > 0 && "Uploading: " + filePerc + "%"}
+               <p className="pl-1">or drag and drop</p>
+             </div>
+           </div>
+         </div>
+       </div>
+      ):(
       <div className="border-b border-gray-900/10 p-12 flex-col items-center justify-center">
         <h2 className="text-base font-semibold leading-7 text-gray-900">
           Upload Your Podcast.
@@ -108,7 +147,8 @@ const UploadPodcast = () => {
           This information will be displayed publicly so be careful what you
           share.
         </p>
-        <div className="col-span-full">
+        
+       {/*  <div className="col-span-full">
           <label
             htmlFor="file"
             className="block text-sm font-medium leading-6 text-gray-900"
@@ -124,7 +164,7 @@ const UploadPodcast = () => {
               <div className="mt-1 flex justify-center align-middle text-sm leading-6 text-gray-600">
                 <label
                   htmlFor="file"
-                  className=" cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                  className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                 >
                   <span>Upload a file</span>
                   <input
@@ -141,7 +181,7 @@ const UploadPodcast = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="sm:col-span-6">
             <label
@@ -241,7 +281,7 @@ const UploadPodcast = () => {
             Upload
           </button>
         </div>
-      </div>
+      </div>)}
     </form>
   );
 };
