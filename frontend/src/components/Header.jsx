@@ -6,12 +6,20 @@ import { server } from "../server";
 const Header = () => {
   const navigate = useNavigate();
 
-  const logout = () => navigate("/account");
+  const logout = () => {
+    sessionStorage.removeItem("accessToken")
+    sessionStorage.removeItem("refreshToken")
+    sessionStorage.removeItem("email")
+    navigate("/");
+  }
 
   const [podcast, setPodcast] = useState("");
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  
+
 
   const getPodcast = async () => {
     setIsLoading(true);
@@ -46,8 +54,8 @@ const Header = () => {
         <Link to="/" className="px-4 py-2 text-white no-underline">
           ABOUT
         </Link>
-        <Link to="/" className="px-4 py-2 text-white no-underline">
-          CONTACT
+        <Link to="/login" className="px-4 py-2 text-white no-underline">
+          LOGIN
         </Link>
         <Link
           to="/"

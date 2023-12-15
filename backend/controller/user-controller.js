@@ -46,14 +46,6 @@ export const signupUser = async (req, res, next) => {
       console.log(error);
       return next(createHttpError.InternalServerError());
     }
-
-
-    /*const savedUser = await user.save();
-     const accessToken = await signAccessToken(savedUser.id);
-    const refreshToken = await signRefreshToken(savedUser.id);
-    res
-      .status(200)
-      .json({ accessToken: accessToken, refreshToken: refreshToken }); */
   
     } catch (error) {
     if (error.isJoi === true) error.status = 422;
