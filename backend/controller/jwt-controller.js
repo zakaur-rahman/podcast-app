@@ -1,7 +1,7 @@
 import Jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
-import client from "../database/redis.db.js";
+//import client from "../database/redis.db.js";
 
 import createHttpError from "http-errors";
 
@@ -33,7 +33,7 @@ export const signRefreshToken = (userId) => {
         reject(createHttpError.InternalServerError());
       }
       try {
-        client.setEx(userId, 365 * 24 * 3600, token);
+        //client.setEx(userId, 365 * 24 * 3600, token);
         resolve(token);
       } catch (e) {
         reject(createHttpError.InternalServerError());
@@ -67,7 +67,8 @@ export const verifyRefreshToken = (refreshToken) => {
       }
       const userId = payload.aud;
       try {
-        const value = await client.get(userId); 
+        //const value = await client.get(userId); 
+        const value = userId
         if (value === refreshToken) {
           return resolve(userId);
         } else {

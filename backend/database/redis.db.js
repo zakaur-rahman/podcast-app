@@ -1,4 +1,4 @@
-import { createClient } from "redis";
+/* import { createClient } from "redis";
 
 const client = await createClient()
   .on("error", (err) => console.log("Redis Client Error", err))
@@ -14,3 +14,4 @@ process.on("SIGINT", () => {
 });
 
 export default client;
+ */
