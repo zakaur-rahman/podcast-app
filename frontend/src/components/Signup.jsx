@@ -29,7 +29,7 @@ const Signup = () => {
     
     try {
       await axios
-        .post(`${server}/signup`, values, config)
+        .post(`${server}/api/v2/signup`, values, config)
         .then((res) => {
           console.log(res);
           setValues(initialValues)

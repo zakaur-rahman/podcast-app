@@ -29,13 +29,14 @@ const UploadPodcast = () => {
   const [post, setPost] = useState(initialValues);
   const { account } = useContext(DataContext);
   const [file, setFile] = useState(undefined);
-  const [fileUrl, setfileUrl] = useState(null)
+  const [email, getEmail] = useState("")
   const [filePerc, setFilePerc] = useState(0);
   const [accessToken, setAccessToken] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
     setAccessToken(sessionStorage.getItem("accessToken"));
+    getEmail(sessionStorage.getItem("email"));
   }, []);
 
   useEffect(() => {
@@ -62,8 +63,9 @@ const UploadPodcast = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setfileUrl(downloadURL);
-          console.log("DownloadURL - ", fileUrl);
+          //setfileUrl(downloadURL);
+          post.fileUrl = downloadURL
+          console.log("Download - ", post.fileUrl);
           setFilePerc(0);
         });
       }
@@ -78,11 +80,11 @@ const UploadPodcast = () => {
         Authorization: accessToken,
       },
     };
-    post.fileUrl = fileUrl
-    post.email = account.email;
+    //post.fileUrl = fileUrl
+    post.email = email;
     try {
       post.categories = location.search?.split("=")[1] || "All";
-      await axios.post(`${server}/create`, post, config).then((res) => {
+      await axios.post(`${server}/api/v2/create`, post, config).then((res) => {
         console.log(res);
         setPost(initialValues);
         alert("Uploaded..");
@@ -103,7 +105,7 @@ const UploadPodcast = () => {
       onSubmit={(e) => handleUpload(e)}
       className=" rounded-md shadow-sm ring-1 ring-inset ring-gray-300 space-y-12 space-x-8 items-center flex-col relative justify-center"
     >
-      {!fileUrl ? (
+      {!post.fileUrl ? (
          <div className="col-span-full">
          <label
            htmlFor="file"

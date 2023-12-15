@@ -30,7 +30,7 @@ const Login = () => {
      },
     };
     try {
-      await axios.post(`${server}/login`, values, config).then((res) => {
+      await axios.post(`${server}/api/v2/login`, values, config).then((res) => {
         console.log(res);
         toast.success(res.data.message);
         if (res.status === 200) {
@@ -41,6 +41,10 @@ const Login = () => {
           sessionStorage.setItem(
             "refreshToken",
             `Bearer ${res.data.refreshToken}`
+          );
+          sessionStorage.setItem(
+            "email",
+            `${res.data.email}`
           );
           setAccount({
             name: res.data.name,

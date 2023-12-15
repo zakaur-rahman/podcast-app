@@ -8,8 +8,8 @@ const Post = ({ post }) => {
     } 
 
     return (
-        <div className="border border-solid border-gray-300 rounded-md m-10 flex flex-col items-center h-350">
-            <video width="600">
+        <div  className="border border-solid border-gray-300 rounded-md m-10 flex flex-col items-center h-350">
+            <video width="600" controls>
         <source src= {post.fileUrl} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
