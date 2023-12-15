@@ -2,7 +2,7 @@ import User from "../model/user.js";
 import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 import {sendMail} from "../utils/sendMail.js"
-import client from "../database/redis.db.js";
+//import client from "../database/redis.db.js";
 import { joiSchemaSignup, joiSchemaLogin } from "../tools/validation-schema.js";
 import {
   signAccessToken,
@@ -111,7 +111,7 @@ export const logoutUser = async (req, res, next) => {
     if (!refreshToken) throw next(createHttpError.BadRequest());
     const userId = await verifyRefreshToken(refreshToken);
 
-    await client.del(`${userId}`);
+    //await client.del(`${userId}`);
     res.sendStatus(204);
   } catch (err) {
     next(createHttpError.InternalServerError());
