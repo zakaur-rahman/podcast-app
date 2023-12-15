@@ -35,10 +35,8 @@ app.use((err, req, res, next) => {
 
 
 const PORT = process.env.PORT || 8000
-const username = process.env.DB_USERNAME;
-const password = process.env.DB_PASSWORD;
 
-Connect(username, password)
+Connect(process.env.MONGODB_URL)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
