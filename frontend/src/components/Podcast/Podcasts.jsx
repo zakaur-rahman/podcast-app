@@ -13,7 +13,7 @@ const Podcasts = () => {
   useEffect(() => {
     const fetchData = async () => {
       let response = await API.getAllPosts({ category: category || '' });
-      if (response.isSuccess) {
+      if (response.success) {
         setPodcasts(response.data);
       }
     };
