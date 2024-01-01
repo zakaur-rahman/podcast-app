@@ -102,7 +102,7 @@ export const logoutUser = async (req, res, next) => {
     if (!refreshToken) throw next(createHttpError.BadRequest());
     const userId = await verifyRefreshToken(refreshToken);
 
-    //await client.del(`${userId}`);
+    await client.del(`${userId}`);
     res.sendStatus(204);
   } catch (err) {
     next(createHttpError.InternalServerError());

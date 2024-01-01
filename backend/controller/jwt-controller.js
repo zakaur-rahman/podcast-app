@@ -10,7 +10,7 @@ export const signAccessToken = (userId) => {
     const payload = {};
     const ACCESS_SECRET_KEY = process.env.ACCESS_SECRET_KEY;
     const options = {
-      expiresIn: "15m",
+      expiresIn: "5m",
       audience: userId, //expiration time in seconds
     };
     try {
@@ -35,7 +35,7 @@ export const signRefreshToken = (userId) => {
         reject(createHttpError.InternalServerError());
       }
       try {
-        //client.setEx(userId, 365 * 24 * 3600, token);
+        client.setEx(userId, 365 * 24 * 3600, token);
         resolve(token);
       } catch (e) {
         reject(createHttpError.InternalServerError());
@@ -71,8 +71,7 @@ export const verifyRefreshToken = (refreshToken) => {
         }
         const userId = payload.aud;
         try {
-          //const value = await client.get(userId);
-          const value = userId; // This is a temporary
+          const value = await client.get(userId);
           if (value === refreshToken) {
             return resolve(userId);
           } else {

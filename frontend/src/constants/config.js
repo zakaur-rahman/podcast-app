@@ -33,4 +33,5 @@ export const SERVICE_URLS = {
     activateAccount: { url: '/activation', method: 'POST' },
     getPostById: { url: 'post', method: 'GET', query: true },
     deletePodcast: { url: 'delete', method: 'DELETE', query: true },
+    userLogout: { url: '/logout', method: 'POST'},
 }

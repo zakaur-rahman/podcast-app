@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { API } from "../service/api.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { ThreeDots } from 'react-loader-spinner'
 
 const initialValues = {
   name: "",
@@ -16,6 +17,7 @@ const Signup = () => {
   const [values, setValues] = useState(initialValues);
   const [visible, setVisible] = useState(true);
   const navigate = useNavigate();
+  const [isLoading, setLoading] = useState(false)
 
   
 
@@ -23,16 +25,18 @@ const Signup = () => {
     e.preventDefault();
     
     try {
-     
+        setLoading(true)
         let response = await API.userSignup(values);
         if (response.isSuccess) {
           setValues(initialValues)
           alert("Please check your email for verification.");
-          navigate('/login')
+          navigate("/login");
+          setLoading(false)
         }
     } catch (err) {
       
       console.log("error:", err.msg);
+      setLoading(false)
       toast.error(`${err.msg}`)
     }
   };
@@ -131,9 +135,16 @@ const Signup = () => {
             <div>
               <button
                 type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700  "
+                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700"
+                disabled={isLoading}
               >
-                Sign Up
+                {isLoading ? (
+                  <div className="loader">
+                    <ThreeDots visible={true} height="25" width="40" color="white" radius="9" ariaLabel="three-dots-loading" wrapperStyle={{}} wrapperClass="" />
+                  </div>
+                ) : (
+                  "Sign Up"
+                )}
               </button>
             </div>
             <div className={`${styles.normalFlex} w-full`}>
