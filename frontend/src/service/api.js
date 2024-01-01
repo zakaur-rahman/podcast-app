@@ -8,7 +8,8 @@ import {
   getType,
 } from "../utils/common-utils";
 
-const API_URL = "http://localhost:8000/api/v2";
+//const API_URL = "http://localhost:8000/api/v2";
+const API_URL = "https://podcast-api-9yo1.onrender.com/api/v2"
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
