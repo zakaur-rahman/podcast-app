@@ -1,22 +1,29 @@
-import dotenv from "dotenv";
 import { createClient } from "redis";
+import dotenv from "dotenv";
 dotenv.config();
 
-(async () => {
-  // Connect to your internal Redis instance using the REDIS_URL environment variable
-  // The REDIS_URL is set to the internal Redis URL e.g. redis://red-343245ndffg023:6379
+async function initializeRedis() {
   const client = createClient({
-    url: process.env.REDIS_URL,
+    url: process.env.REDIS_URL
   });
-
-  client.on("error", (err) => console.log("Redis Client Error", err));
 
   await client.connect();
 
-  // Send and retrieve some values
-  /* await client.set("key", "node redis");
-  const value = await client.get("key"); */
+  client.on("error", (err) => console.log("Redis Client Error", err));
 
-  /* console.log("found value: ", value); */
-})();
+  client.on("end", () => {
+    console.log("Redis connection closed");
+  });
+
+  process.on("SIGINT", () => {
+    client.quit(() => {
+      console.log("Redis client disconnected through app termination");
+      process.exit(0);
+    });
+  });
+
+  return client;
+}
+
+const client = await initializeRedis();
 export default client;
