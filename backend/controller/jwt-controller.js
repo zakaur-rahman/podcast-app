@@ -1,7 +1,7 @@
 import Jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
-//import client from "../database/redis.db.js";
+import client from "../database/redis.db.js";
 
 import createHttpError from "http-errors";
 
