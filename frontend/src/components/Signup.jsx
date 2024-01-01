@@ -3,9 +3,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../styles/styles.js";
 import { Link } from "react-router-dom";
 import { API } from "../service/api.js";
-import axios from 'axios'
 import { useNavigate } from "react-router-dom";
-import { server } from "../server.js";
 import { toast } from "react-toastify";
 
 const initialValues = {
@@ -23,22 +21,19 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const config = {
-      headers: { "Content-Type": "application/json" },
-    };
     
     try {
-      await axios
-        .post(`${server}/api/v2/signup`, values, config)
-        .then((res) => {
-          console.log(res);
+     
+        let response = await API.userSignup(values);
+        if (response.isSuccess) {
           setValues(initialValues)
           alert("Please check your email for verification.");
           navigate('/login')
-        });
+        }
     } catch (err) {
-      toast.error(`${err.message}`)
-      console.log("error:", err);
+      
+      console.log("error:", err.msg);
+      toast.error(`${err.msg}`)
     }
   };
   
@@ -94,6 +89,7 @@ const Signup = () => {
                   onChange={(e) => {
                     handleInputChange(e);
                   }}
+                  
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
@@ -131,39 +127,7 @@ const Signup = () => {
                 )}
               </div>
             </div>
-            {/* <div>
-              <label
-                htmlFor="avatar"
-                className="block text-sm font-medium text-gray-700"
-              ></label>
-              <div className="mt-2 flex items-center">
-                <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
-                  {avatar ? (
-                    <img
-                      src={URL.createObjectURL(avatar)}
-                      alt="avatar"
-                      className="h-full w-full object-cover rounded-full"
-                    />
-                  ) : (
-                    <RxAvatar className="h-8 w-8" />
-                  )}
-                </span>
-                <label
-                  htmlFor="file-input"
-                  className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100"
-                >
-                  <span>Upload a File</span>
-                  <input
-                    type="file"
-                    name="avatar"
-                    id="file-input"
-                    accept=".jpg, .jpeg, .png"
-                    onChange={(e) => handleFileInput(e)}
-                    className="sr-only"
-                  />
-                </label>
-              </div>
-            </div> */}
+        
             <div>
               <button
                 type="submit"

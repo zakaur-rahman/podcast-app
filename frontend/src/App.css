@@ -42,3 +42,10 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+
+
+.img {
+  width: 120%; /* Adjust the width as needed */
+  height: 640px; /* Set a fixed height or adjust as needed */
+}

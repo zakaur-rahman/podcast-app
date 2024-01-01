@@ -17,10 +17,11 @@ export const createPodcast = async (req, res, next) => {
 export const getAllPodcast = async (req, res, next) => {
   let email = req.query.email;
   let category = req.query.category;
+  console.log(req);
   let podcasts;
   try {
-    if (email) posts = await Podcast.find({ email: email });
-    else if (category) posts = await Podcast.find({ categories: category });
+    if (email) podcasts = await Podcast.find({ email: email });
+    else if (category) podcasts = await Podcast.find({ categories: category });
     else podcasts = await Podcast.find({});
 
     res.status(200).json(podcasts);
@@ -36,3 +37,17 @@ export const getPodcastById = async (req, res, next) => {
   }
   res.status(200).json(podcastData);
 };
+
+
+export const deletePodcast = async (request, response, next) => {
+  try {
+    console.log(request);
+      const post = await Podcast.findById(request.params.id);
+
+      await post.deleteOne()
+
+      response.status(200).json('Post deleted successfully');
+  } catch (error) {
+    return next(createHttpError(error));
+  }
+}

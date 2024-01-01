@@ -16,6 +16,7 @@ import {
   ActivationPage,
   HomePage,
   UploadPodcast,
+  PodcastById,
 } from "./Routes.js";
 
 const PrivateRoute = () => {
@@ -38,6 +39,9 @@ const App = () => {
             <Route element={<PrivateRoute />}>
               <Route path="/create" element={<UploadPodcast />} />
             </Route>
+            <Route element={<PrivateRoute />}>
+              <Route path='/details/:id' element={<PodcastById />} />
+            </Route>
 
             <Route path="/" element={<HomePage />} />
             <Route
@@ -46,7 +50,7 @@ const App = () => {
             />
             <Route path="/signup" element={<SignupPage />} />
             <Route
-              path="/activation/activation_token"
+              path="/activation/:activation_token"
               element={<ActivationPage />}
             />
           </Routes>

@@ -9,7 +9,8 @@ const DataProvider = ({ children }) => {
     return (
         <DataContext.Provider value={{ 
             account, 
-            setAccount 
+            setAccount ,
+        
         }}>
             {children}
         </DataContext.Provider>

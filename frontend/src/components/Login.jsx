@@ -2,11 +2,10 @@ import React, { useState, useContext } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../styles/styles.js";
 import { Link, useNavigate } from "react-router-dom";
-//import { API } from "../service/api.js";
+import { API } from "../service/api.js";
 import { toast } from "react-toastify";
 import { DataContext } from "../context/DataProvider.js";
-import axios from "axios";
-import { server } from "../server.js";
+import { ThreeDots } from 'react-loader-spinner'
 
 const initialValues = {
   email: "",
@@ -16,8 +15,9 @@ const initialValues = {
 const Login = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState(initialValues);
+  const [isLoading, setLoading] = useState(false);
   const { setAccount } = useContext(DataContext);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   const handleInputChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -25,39 +25,22 @@ const Login = () => {
 
   const loginUser = async (e) => {
     e.preventDefault();
-    const config = {
-      headers: { "Content-Type": "application/json",
-     },
-    };
-    try {
-      await axios.post(`${server}/api/v2/login`, values, config).then((res) => {
-        console.log(res);
-        toast.success(res.data.message);
-        if (res.status === 200) {
-          sessionStorage.setItem(
-            "accessToken",
-            `Bearer ${res.data.accessToken}`
-          );
-          sessionStorage.setItem(
-            "refreshToken",
-            `Bearer ${res.data.refreshToken}`
-          );
-          sessionStorage.setItem(
-            "email",
-            `${res.data.email}`
-          );
-          setAccount({
-            name: res.data.name,
-            email: res.data.email,
-          });
 
-          setValues(initialValues);
-          navigate("/");
-        }
-      });
-    } catch (err) {
-      toast.error(err.message);
-      console.log('Error: ', err);
+    try {
+      setLoading(true);
+      let response = await API.userLogin(values);
+      if (response.isSuccess) {
+        sessionStorage.setItem('accessToken', `Bearer ${response.data.accessToken}`);
+        sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
+        setAccount({ name: response.data.name, email: response.data.email });
+        setValues(initialValues);
+        setLoading(false);
+        navigate('/');
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error(error.msg);
+      toast.error(`${error.msg}`);
     }
   };
 
@@ -87,6 +70,7 @@ const Login = () => {
                   onChange={(e) => {
                     handleInputChange(e);
                   }}
+                  disabled={isLoading} 
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
@@ -107,6 +91,7 @@ const Login = () => {
                   onChange={(e) => {
                     handleInputChange(e);
                   }}
+                  disabled={isLoading} 
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
                 {visible ? (
@@ -143,9 +128,16 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700  "
+                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700"
+                disabled={isLoading}
               >
-                Log In
+                {isLoading ? (
+                  <div className="loader">
+                    <ThreeDots visible={true} height="25" width="40" color="white" radius="9" ariaLabel="three-dots-loading" wrapperStyle={{}} wrapperClass="" />
+                  </div>
+                ) : (
+                  "Log In"
+                )}
               </button>
             </div>
             <div className={`${styles.normalFlex} w-full`}>

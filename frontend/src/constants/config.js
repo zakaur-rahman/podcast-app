@@ -9,16 +9,15 @@ export const API_NOTIFICATION_MESSAGES = {
         message: "Data successfully loaded"
     },
     requestFailure: {
-        title: "Error!",
         message: "An error occur while parsing request data"
     },
     responseFailure: {
         title: "Error!",
-        message: "An error occur while fetching response from server. Please try again"
+        message: "Failed to load data from server. Please try again"
     },
     networkError: {
         title: "Error!",
-        message: "Unable to connect to the server. Please check internet connectivity and try again."
+        message: "Please check internet connectivity and try again."
     }
 }
 
@@ -30,12 +29,8 @@ export const SERVICE_URLS = {
     userSignup: { url: '/signup', method: 'POST' },
     getAllPosts: { url: '/posts', method: 'GET', params: true },
     getRefreshToken: { url: '/token', method: 'POST' },
-    uploadFile: { url: 'file/upload', method: 'POST' },
     createPost: { url: '/create', method: 'POST' },
-    //deletePost: { url: 'delete', method: 'DELETE', query: true },
+    activateAccount: { url: '/activation', method: 'POST' },
     getPostById: { url: 'post', method: 'GET', query: true },
-    //newComment: { url: '/comment/new', method: 'POST' },
-   // getAllComments: { url: 'comments', method: 'GET', query: true },
-   // deleteComment: { url: 'comment/delete', method: 'DELETE', query: true },
-    //updatePost: { url: 'update', method: 'PUT', query: true }
+    deletePodcast: { url: 'delete', method: 'DELETE', query: true },
 }

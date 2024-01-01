@@ -15,7 +15,9 @@ export const signAccessToken = (userId) => {
     };
     try {
       resolve(Jwt.sign(payload, ACCESS_SECRET_KEY, options));
-    } catch (err) {}
+    } catch (err) {
+      reject(createHttpError.InternalServerError());
+    }
   });
 };
 
@@ -25,7 +27,7 @@ export const signRefreshToken = (userId) => {
     const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
     const options = {
       expiresIn: "1y",
-      audience: userId, 
+      audience: userId,
     };
     Jwt.sign(payload, REFRESH_SECRET_KEY, options, (error, token) => {
       if (error) {
@@ -58,26 +60,29 @@ export const verifyToken = (request, response, next) => {
   });
 };
 
-
 export const verifyRefreshToken = (refreshToken) => {
   return new Promise((resolve, reject) => {
-    Jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY, async (error, payload) => {
-      if (error) {
-        return reject(createHttpError.Unauthorized());
-      }
-      const userId = payload.aud;
-      try {
-        //const value = await client.get(userId); 
-        const value = userId
-        if (value === refreshToken) {
-          return resolve(userId);
-        } else {
-          reject(createHttpError.Unauthorized());
+    Jwt.verify(
+      refreshToken,
+      process.env.REFRESH_SECRET_KEY,
+      async (error, payload) => {
+        if (error) {
+          return reject(createHttpError.Unauthorized());
         }
-      } catch (err) {
-        console.error(err.message);
-        reject(createHttpError.InternalServerError());
+        const userId = payload.aud;
+        try {
+          //const value = await client.get(userId);
+          const value = userId; // This is a temporary
+          if (value === refreshToken) {
+            return resolve(userId);
+          } else {
+            reject(createHttpError.Unauthorized());
+          }
+        } catch (err) {
+          console.error(err.message);
+          reject(createHttpError.InternalServerError());
+        }
       }
-    });
+    );
   });
 };

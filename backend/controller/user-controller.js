@@ -14,7 +14,6 @@ import jwt from "jsonwebtoken"
 
 export const signupUser = async (req, res, next) => {
   try {
-    console.log(req.body);
     const result = await joiSchemaSignup.validateAsync(req.body);
     const doesExist = await User.findOne({ email: result.email });
     if (doesExist) {
@@ -29,7 +28,7 @@ export const signupUser = async (req, res, next) => {
 
 
     const activationToken = createActivationToken(user);
-    const activationUrl = `https://a1podcast.netlify.app/activation/${activationToken}`;
+    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
 
 
     try {
@@ -115,7 +114,7 @@ export const logoutUser = async (req, res, next) => {
 // Function to create activation token
 const createActivationToken = (user) => {
   return jwt.sign(user, process.env.ACTIVATION_SECRET, {
-    expiresIn: "5m",
+    expiresIn: "15m",
   });
 };
 
