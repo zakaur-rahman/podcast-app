@@ -1,29 +1,19 @@
 import { createClient } from "redis";
-import dotenv from "dotenv";
-dotenv.config();
 
-async function initializeRedis() {
-  const client = createClient({
-    url: process.env.REDIS_URL
-  });
+const client = await createClient({
+  url : "redis://red-cm9f1ovqd2ns73dpq650:6379"
+})
+  .on("error", (err) => console.log("Redis Client Error", err))
+  .connect();
 
-  await client.connect();
 
-  client.on("error", (err) => console.log("Redis Client Error", err));
+client.on("end", () => {
+  console.log("Redis connection closed");
+});
 
-  client.on("end", () => {
-    console.log("Redis connection closed");
-  });
+process.on("SIGINT", () => {
+  client.quit();
+});
 
-  process.on("SIGINT", () => {
-    client.quit(() => {
-      console.log("Redis client disconnected through app termination");
-      process.exit(0);
-    });
-  });
-
-  return client;
-}
-
-const client = await initializeRedis();
 export default client;
+ 
